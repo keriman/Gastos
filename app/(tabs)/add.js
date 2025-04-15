@@ -123,6 +123,11 @@ export default function AddScreen() {
             text: 'OK', 
             onPress: () => {
               const timestamp = new Date().getTime();
+              
+              // Primero, actualiza globalmente el timestamp para todas las pestañas
+              global.lastUpdateTimestamp = timestamp;
+              
+              // Luego, navega de vuelta a la pestaña de transacciones con el parámetro
               router.push({
                 pathname: '/(tabs)',
                 params: { updated: timestamp }

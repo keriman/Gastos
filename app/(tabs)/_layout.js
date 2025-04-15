@@ -1,8 +1,21 @@
-// app/(tabs)/_layout.js
+// app/(tabs)/_layout.js - Versión mejorada
+import { useLocalSearchParams } from 'expo-router';
 import { Tabs } from 'expo-router';
 import { PlusCircle, LineChart, Wallet } from 'lucide-react-native';
+import { useEffect } from 'react';
 
 export default function TabLayout() {
+  // Obtener parámetros compartidos a nivel de pestañas
+  const { updated } = useLocalSearchParams();
+  
+  // Al cambiar updated, actualizar el timestamp global
+  useEffect(() => {
+    if (updated) {
+      console.log('Setting global timestamp from layout:', updated);
+      global.lastUpdateTimestamp = updated;
+    }
+  }, [updated]);
+
   return (
     <Tabs
       screenOptions={{

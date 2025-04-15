@@ -71,6 +71,14 @@ export default function ChartsScreen() {
   const { updated } = useLocalSearchParams();
 
   useEffect(() => {
+    // Verificar si hay un timestamp global más reciente que el que tenemos
+    if (global.lastUpdateTimestamp) {
+      console.log('Detected global update in charts:', global.lastUpdateTimestamp);
+      loadStats();
+    }
+  }, []);
+  
+  useEffect(() => {
     loadStats();
   }, [dateRange, updated]);
 
