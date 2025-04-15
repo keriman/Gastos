@@ -9,10 +9,18 @@ import {
   TouchableOpacity,
   StatusBar,
   Animated,
-  ActivityIndicator
+  ActivityIndicator,
+  LayoutAnimation,
+  Platform,
+  UIManager
 } from 'react-native';
 import { getTransactions, getStatsSummary } from '../../utils/db';
 import { useLocalSearchParams } from 'expo-router';
+
+// Habilitar LayoutAnimation en Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function TransactionsScreen() {
   const [transactions, setTransactions] = useState([]);
@@ -20,7 +28,6 @@ export default function TransactionsScreen() {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
   const [showSummary, setShowSummary] = useState(true);
-  const summaryHeight = useRef(new Animated.Value(1)).current;
 
   // Obtener los parámetros de búsqueda locales
   const { updated } = useLocalSearchParams();
@@ -54,14 +61,11 @@ export default function TransactionsScreen() {
     }
   };
 
+  // Método simple para toggle con LayoutAnimation
   const toggleSummary = () => {
-    const toValue = showSummary ? 0 : 1;
-    Animated.spring(summaryHeight, {
-      toValue,
-      friction: 10,
-      tension: 40,
-      useNativeDriver: false
-    }).start();
+    // Configurar la animación
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    // Actualizar el estado
     setShowSummary(!showSummary);
   };
 
@@ -92,11 +96,6 @@ export default function TransactionsScreen() {
   };
 
   const renderHeader = () => {
-    const summaryContainerHeight = summaryHeight.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 150]
-    });
-
     return (
       <View style={styles.headerContainer}>
         <TouchableOpacity 
@@ -110,55 +109,53 @@ export default function TransactionsScreen() {
           <Text style={styles.toggleIcon}>{showSummary ? "▲" : "▼"}</Text>
         </TouchableOpacity>
 
-        <Animated.View 
-          style={[
-            styles.summaryContainer, 
-            { height: summaryContainerHeight, overflow: 'hidden' }
-          ]}
-        >
-          {summary ? (
-            <>
-              <View style={styles.summaryRow}>
-                <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Balance del mes</Text>
-                  <Text 
-                    style={[
-                      styles.summaryValue, 
-                      { color: summary.balance >= 0 ? '#4CAF50' : '#F44336' }
-                    ]}
-                  >
-                    ${formatCurrency(summary.balance)}
-                  </Text>
+        {/* Usar un condicional directo en lugar de Animated.View */}
+        {showSummary && (
+          <View style={styles.summaryContainer}>
+            {summary ? (
+              <>
+                <View style={styles.summaryRow}>
+                  <View style={styles.summaryItem}>
+                    <Text style={styles.summaryLabel}>Balance del mes</Text>
+                    <Text 
+                      style={[
+                        styles.summaryValue, 
+                        { color: summary.balance >= 0 ? '#4CAF50' : '#F44336' }
+                      ]}
+                    >
+                      ${formatCurrency(summary.balance)}
+                    </Text>
+                  </View>
+                  <View style={styles.summaryItem}>
+                    <Text style={styles.summaryLabel}>Tasa de ahorro</Text>
+                    <Text style={styles.summaryValue}>
+                      {summary.total_income > 0 
+                        ? Math.round((summary.balance / summary.total_income) * 100) 
+                        : 0}%
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Tasa de ahorro</Text>
-                  <Text style={styles.summaryValue}>
-                    {summary.total_income > 0 
-                      ? Math.round((summary.balance / summary.total_income) * 100) 
-                      : 0}%
-                  </Text>
-                </View>
-              </View>
 
-              <View style={styles.summaryRow}>
-                <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Ingresos</Text>
-                  <Text style={[styles.summaryValue, { color: '#4CAF50' }]}>
-                    ${formatCurrency(summary.total_income)}
-                  </Text>
+                <View style={styles.summaryRow}>
+                  <View style={styles.summaryItem}>
+                    <Text style={styles.summaryLabel}>Ingresos</Text>
+                    <Text style={[styles.summaryValue, { color: '#4CAF50' }]}>
+                      ${formatCurrency(summary.total_income)}
+                    </Text>
+                  </View>
+                  <View style={styles.summaryItem}>
+                    <Text style={styles.summaryLabel}>Gastos</Text>
+                    <Text style={[styles.summaryValue, { color: '#F44336' }]}>
+                      ${formatCurrency(summary.total_expense)}
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Gastos</Text>
-                  <Text style={[styles.summaryValue, { color: '#F44336' }]}>
-                    ${formatCurrency(summary.total_expense)}
-                  </Text>
-                </View>
-              </View>
-            </>
-          ) : (
-            <ActivityIndicator size="small" color="#007AFF" />
-          )}
-        </Animated.View>
+              </>
+            ) : (
+              <ActivityIndicator size="small" color="#007AFF" />
+            )}
+          </View>
+        )}
       </View>
     );
   };

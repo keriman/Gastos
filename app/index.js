@@ -16,7 +16,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Finance App</Text>
+      <Text style={styles.title}>Mi Salud Financiera</Text>
       <Text style={styles.subtitle}>Gestionando tus finanzas</Text>
       <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
     </View>
