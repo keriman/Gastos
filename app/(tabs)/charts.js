@@ -70,12 +70,25 @@ export default function ChartsScreen() {
   // Obtener los parámetros de búsqueda para actualizaciones
   const { updated } = useLocalSearchParams();
 
+  const lastProcessedTimestamp = useRef(null);
+
+
   useEffect(() => {
-    // Verificar si hay un timestamp global más reciente que el que tenemos
-    if (global.lastUpdateTimestamp) {
-      console.log('Detected global update in charts:', global.lastUpdateTimestamp);
-      loadStats();
-    }
+    // Crear un intervalo que verifique periódicamente si hay cambios en el timestamp global
+    const checkInterval = setInterval(() => {
+      if (global.lastUpdateTimestamp && 
+          global.lastUpdateTimestamp !== lastProcessedTimestamp.current) {
+        console.log('Detected global update in charts:', global.lastUpdateTimestamp);
+        lastProcessedTimestamp.current = global.lastUpdateTimestamp;
+        loadStats();
+      }
+    }, 1000); // Verificar cada segundo
+    
+    // Cargar datos iniciales
+    loadStats();
+    
+    // Limpiar intervalo al desmontar
+    return () => clearInterval(checkInterval);
   }, []);
   
   useEffect(() => {
