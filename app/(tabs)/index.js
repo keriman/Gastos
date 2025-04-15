@@ -1,5 +1,5 @@
 // app/(tabs)/index.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { 
   View, 
   Text, 
@@ -20,7 +20,7 @@ export default function TransactionsScreen() {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
   const [showSummary, setShowSummary] = useState(true);
-  const summaryHeight = new Animated.Value(1);
+  const summaryHeight = useRef(new Animated.Value(1)).current;
 
   // Obtener los parámetros de búsqueda locales
   const { updated } = useLocalSearchParams();
