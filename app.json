@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "salud-financiera",
-    "slug": "salud-financiera",
+    "name": "Mi Salud Financiera",
+    "slug": "Mi Salud Financiera",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.keriman97.saludfinanciera",
+      "bundleIdentifier": "mx.com.ksolutions.saludfinanciera",
       "buildNumber": "1"
     },
     "android": {
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.keriman97.saludfinanciera",
+      "package": "mx.com.ksolutions.saludfinanciera",
       "versionCode": 1
     },
     "web": {
