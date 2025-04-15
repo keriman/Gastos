@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Mi Salud Financiera",
-    "slug": "Mi Salud Financiera",
+    "slug": "mi-salud-financiera",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -43,7 +43,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "9b50276a-fb62-4cbe-9daf-7029457deb19"
+        "projectId": "439c5331-1c8e-4cc1-bb09-b3229c45b4be"
       }
     },
     "owner": "keriman97"
