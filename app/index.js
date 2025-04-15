@@ -1,6 +1,6 @@
 // app/index.js
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { router } from 'expo-router';
 
 export default function HomeScreen() {
@@ -16,6 +16,11 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <Image 
+        source={require('../assets/images/logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
       <Text style={styles.title}>Mi Salud Financiera</Text>
       <Text style={styles.subtitle}>Gestionando tus finanzas</Text>
       <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
@@ -30,6 +35,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  logo: {
+    width: 150, // Ajusta el tamaño según necesites
+    height: 150, // Ajusta el tamaño según necesites
+    marginBottom: 20,
   },
   title: {
     fontSize: 28,
@@ -47,4 +57,4 @@ const styles = StyleSheet.create({
   loader: {
     marginTop: 20
   }
-});
+});   

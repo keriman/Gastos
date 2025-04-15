@@ -331,7 +331,55 @@ export const getMonthlyStatsWithDateRange = async (startDate, endDate) => {
   }
 };
 
-//
+// Añadir estas funciones a tu archivo utils/db.js
+// Asegúrate de importar y usar la misma instancia 'db' que ya tienes en tu archivo
 
-// Export for direct access if needed
+// Función para editar una transacción existente
+// Reemplaza las funciones add/update/delete transaction en tu archivo utils/db.js
+
+// Función para editar una transacción existente
+export const updateTransaction = async (id, amount, description, categoryId, type, date) => {
+  try {
+    const result = await db.runAsync(
+      'UPDATE transactions SET amount = ?, description = ?, category_id = ?, type = ?, date = ? WHERE id = ?',
+      [amount, description, categoryId, type, date, id]
+    );
+    return result;
+  } catch (error) {
+    console.error('Error updating transaction:', error);
+    throw error;
+  }
+};
+
+// Función para eliminar una transacción
+export const deleteTransaction = async (id) => {
+  try {
+    const result = await db.runAsync(
+      'DELETE FROM transactions WHERE id = ?',
+      [id]
+    );
+    return result;
+  } catch (error) {
+    console.error('Error deleting transaction:', error);
+    throw error;
+  }
+};
+
+// Función para obtener una transacción específica por ID
+export const getTransactionById = async (id) => {
+  try {
+    const result = await db.getFirstAsync(
+      `SELECT t.*, c.name as category_name 
+       FROM transactions t 
+       JOIN categories c ON t.category_id = c.id 
+       WHERE t.id = ?`,
+      [id]
+    );
+    return result;
+  } catch (error) {
+    console.error('Error getting transaction by id:', error);
+    throw error;
+  }
+};
+
 export { db };
